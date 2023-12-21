@@ -14,19 +14,21 @@ var rollbar = new Rollbar({
 // record a generic message and send it to Rollbar
 rollbar.log("Hello world!");
 
-const students = ["Jimmy", "Timothy", "Jimothy"];
+const students = ["Jimmy", "Timothy", "Jimothy", "Himothy"];
 
 app.get("/", (req, res) => {
+  rollbar.info("User accessed the site.");
   res.sendFile(path.join(__dirname, "/index.html"));
 });
 
 app.get("/api/students", (req, res) => {
+  rollbar.warning("User is accessing student infomation! Uh-oh!");
   res.status(200).send(students);
 });
 
 app.post("/api/students", (req, res) => {
   let { name } = req.body;
-
+  rollbar.critical(`THERE IS AN IMPOSTER AMONG US!! THEIR NAME IS ${name}`);
   const index = students.findIndex((student) => {
     return student === name;
   });
@@ -47,7 +49,9 @@ app.post("/api/students", (req, res) => {
 
 app.delete("/api/students/:index", (req, res) => {
   const targetIndex = +req.params.index;
-
+  rollbar.error(
+    "There was an error.... btw, this was the delete function, I'm sure it works great."
+  );
   students.splice(targetIndex, 1);
   res.status(200).send(students);
 });
